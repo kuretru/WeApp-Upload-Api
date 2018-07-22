@@ -10,7 +10,8 @@ server:
 ---
 spring:
   profiles: local
-com.jhkj.weapp.upload.directory: G:\\jhkj\\upload
+com.jhkj.weapp.upload.parent: G:\\jhkj\\upload
+com.jhkj.weapp.upload.temporary: \\temporary
 
 ---
 spring:

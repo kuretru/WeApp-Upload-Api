@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 @PropertySource("classpath:application.yml")
 public class UploadConfiguration {
 
-    private String directory;
+    private String parent;
+
+    private String temporary;
 
 }
