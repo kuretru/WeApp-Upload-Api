@@ -1,0 +1,17 @@
+spring:
+  profiles: common
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+server:
+  port: 28023
+
+---
+spring:
+  profiles: local
+com.jhkj.weapp.upload.directory: G:\\jhkj\\upload
+
+---
+spring:
+  profiles: production

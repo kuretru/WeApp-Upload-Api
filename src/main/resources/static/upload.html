@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>文件上传测试</title>
+</head>
+<body>
+
+<form id="uploadForm" enctype="multipart/form-data">
+  <input id="file1" type="file" name="files">
+  <input id="file2" type="file" name="files">
+  <input id="file3" type="file" name="files">
+  <button id="upload" type="button">上传</button>
+</form>
+<p id="message"></p>
+
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $("#upload").click(function () {
+        $.ajax({
+            url: "/api/upload",
+            type: "POST",
+            cache: false,
+            data: new FormData($("#uploadForm")[0]),
+            processData: false,
+            contentType: false
+        }).done(function (result) {
+            $("#message").html(result.data);
+        }).fail(function (result) {
+            $("#message").html(result.responseJSON.data);
+        });
+    });
+</script>
+</body>
+</html>
