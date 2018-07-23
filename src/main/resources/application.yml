@@ -16,3 +16,5 @@ com.jhkj.weapp.upload.temporary: \\temporary
 ---
 spring:
   profiles: production
+com.jhkj.weapp.upload.parent: /usr/share/tomcat/webapps/WxImg
+com.jhkj.weapp.upload.temporary: /temporary

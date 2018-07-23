@@ -8,7 +8,7 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>WeApp-Upload-Api</name>
+  <name>WeApp Upload Api</name>
   <description>微信小程序公用文件上传API</description>
 
   <parent>
