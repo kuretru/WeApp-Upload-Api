@@ -2,16 +2,18 @@ package com.jhkj.weapp.upload.controller;
 
 import com.jhkj.weapp.common.controller.BaseController;
 import com.jhkj.weapp.common.entity.ApiResponse;
+import com.jhkj.weapp.common.entity.UploadVO;
 import com.jhkj.weapp.common.exception.InvalidParametersException;
+import com.jhkj.weapp.common.exception.MissingParametersException;
 import com.jhkj.weapp.upload.service.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,7 +31,7 @@ public class UploadController extends BaseController {
     private UploadService service;
 
     @PostMapping("/upload")
-    public ApiResponse upload(List<MultipartFile> files) throws InvalidParametersException {
+    public ApiResponse upload(List<MultipartFile> files) throws InvalidParametersException, MissingParametersException {
         List<String> result = new ArrayList();
         for (MultipartFile file : files) {
             //region 1.判断文件是否存在
@@ -41,7 +43,7 @@ public class UploadController extends BaseController {
             String suffix = service.checkSuffix(file.getOriginalFilename());
             //endregion
             //region 3.生成文件名
-            String fileName = service.generateFileName(suffix);
+            String fileName = service.getTemporaryFileName(suffix);
             String fullPath = service.getCompletePath(fileName);
             //endregion
             //region 4.写入文件
@@ -58,9 +60,19 @@ public class UploadController extends BaseController {
         }
 
         if (result.isEmpty()) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return ApiResponse.missingParameters("未接收到文件，表单项名称使用\"files\"。");
+            throw new MissingParametersException("未接收到文件，表单项名称使用\"files\"。");
         }
+        return ApiResponse.success(result);
+    }
+
+    @PostMapping("/confirm")
+    public ApiResponse confirm(@RequestBody UploadVO uploadVO) throws InvalidParametersException, MissingParametersException {
+        if (uploadVO.getOriginalFiles() == null) {
+            throw new MissingParametersException("临时文件名。");
+        } else if (!uploadVO.verify()) {
+            throw new InvalidParametersException("API令牌不合法。");
+        }
+        List<String> result = service.confirm(uploadVO);
         return ApiResponse.success(result);
     }
 

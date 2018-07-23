@@ -10,11 +10,11 @@ server:
 ---
 spring:
   profiles: local
-com.jhkj.weapp.upload.parent: G:\\jhkj\\upload
-com.jhkj.weapp.upload.temporary: \\temporary
+com.jhkj.weapp.upload.parent: G:\\jhkj\\upload\\
+com.jhkj.weapp.upload.temporary: temporary
 
 ---
 spring:
   profiles: production
-com.jhkj.weapp.upload.parent: /usr/share/tomcat/webapps/WxImg
-com.jhkj.weapp.upload.temporary: /temporary
+com.jhkj.weapp.upload.parent: /usr/share/tomcat/webapps/WxImg/
+com.jhkj.weapp.upload.temporary: temporary
