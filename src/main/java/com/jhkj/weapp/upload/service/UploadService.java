@@ -70,7 +70,7 @@ public class UploadService {
         }
         String monthlyPath = getMonthlyPath();
         formalPath = formalPath + monthlyPath;
-        monthlyPath.replace(File.separator, "/");
+        monthlyPath = monthlyPath.replace(File.separator, "/");
         if (!new File(formalPath).exists()) {
             new File(formalPath).mkdirs();
         }
