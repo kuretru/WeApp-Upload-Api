@@ -1,6 +1,6 @@
 package com.jhkj.weapp.upload.service;
 
-import com.jhkj.weapp.common.entity.UploadVO;
+import com.jhkj.weapp.common.entity.transfer.UploadDTO;
 import com.jhkj.weapp.common.exception.InvalidParametersException;
 import com.jhkj.weapp.common.filter.SuffixFilter;
 import com.jhkj.weapp.common.util.StringUtils;
@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -24,14 +25,6 @@ import java.util.UUID;
 public class UploadService {
     @Autowired
     private UploadConfiguration configuration;
-
-    private String getSuffix(String fileName) {
-        int lastDotIndex = fileName.lastIndexOf(".");
-        if (lastDotIndex == -1) {
-            return null;
-        }
-        return fileName.substring(lastDotIndex + 1);
-    }
 
     public String checkSuffix(String fileName) throws InvalidParametersException {
         String suffix = getSuffix(fileName);
@@ -62,9 +55,17 @@ public class UploadService {
         return fullName.toString();
     }
 
-    public List<String> confirm(UploadVO uploadVO) throws InvalidParametersException {
+    public boolean verifyDTO(UploadDTO uploadDTO) {
+        Map<String, String> secrets = configuration.getSecrets();
+        if (secrets.containsKey(uploadDTO.getCaller())) {
+            return secrets.get(uploadDTO.getCaller()).equals(uploadDTO.getSecret());
+        }
+        return false;
+    }
+
+    public List<String> confirm(UploadDTO uploadDTO) throws InvalidParametersException {
         String temporaryPath = configuration.getParent() + configuration.getTemporary();
-        String formalPath = configuration.getParent() + uploadVO.getCaller();
+        String formalPath = configuration.getParent() + uploadDTO.getCaller();
         if (!new File(formalPath).exists()) {
             throw new InvalidParametersException("文件夹不存在。");
         }
@@ -74,14 +75,30 @@ public class UploadService {
         if (!new File(formalPath).exists()) {
             new File(formalPath).mkdirs();
         }
-        List<String> result = new ArrayList();
-        for (String file : uploadVO.getOriginalFiles()) {
+        List<String> result = new ArrayList<>();
+        for (String file : uploadDTO.getOriginalFiles()) {
             String temporaryFile = temporaryPath + File.separator + file;
+            File oldFile = new File(temporaryFile);
+            if (!oldFile.exists()) {
+                throw new InvalidParametersException(file + "文件不存在");
+            }
+        }
+        for (String file : uploadDTO.getOriginalFiles()) {
+            String temporaryFile = temporaryPath + File.separator + file;
+            File oldFile = new File(temporaryFile);
             String formalFile = getFormalFileName(file);
-            new File(temporaryFile).renameTo(new File(formalPath + formalFile));
+            oldFile.renameTo(new File(formalPath + formalFile));
             result.add(monthlyPath + formalFile);
         }
         return result;
+    }
+
+    private String getSuffix(String fileName) {
+        int lastDotIndex = fileName.lastIndexOf(".");
+        if (lastDotIndex == -1) {
+            return null;
+        }
+        return fileName.substring(lastDotIndex + 1);
     }
 
     private String getMonthlyPath() {

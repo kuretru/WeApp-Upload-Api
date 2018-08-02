@@ -2,7 +2,7 @@ package com.jhkj.weapp.upload.controller;
 
 import com.jhkj.weapp.common.controller.BaseController;
 import com.jhkj.weapp.common.entity.ApiResponse;
-import com.jhkj.weapp.common.entity.UploadVO;
+import com.jhkj.weapp.common.entity.transfer.UploadDTO;
 import com.jhkj.weapp.common.exception.InvalidParametersException;
 import com.jhkj.weapp.common.exception.MissingParametersException;
 import com.jhkj.weapp.upload.service.UploadService;
@@ -66,13 +66,13 @@ public class UploadController extends BaseController {
     }
 
     @PostMapping("/confirm")
-    public ApiResponse confirm(@RequestBody UploadVO uploadVO) throws InvalidParametersException, MissingParametersException {
-        if (uploadVO.getOriginalFiles() == null) {
+    public ApiResponse confirm(@RequestBody UploadDTO uploadDTO) throws InvalidParametersException, MissingParametersException {
+        if (uploadDTO.getOriginalFiles() == null) {
             throw new MissingParametersException("临时文件名。");
-        } else if (!uploadVO.verify()) {
+        } else if (!service.verifyDTO(uploadDTO)) {
             throw new InvalidParametersException("API令牌不合法。");
         }
-        List<String> result = service.confirm(uploadVO);
+        List<String> result = service.confirm(uploadDTO);
         return ApiResponse.success(result);
     }
 

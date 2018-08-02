@@ -26,7 +26,7 @@ public class ExceptionController extends BaseController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(InvalidParametersException.class)
     public ApiResponse invalidParametersExceptionHandler(InvalidParametersException e) {
-        return ApiResponse.missingParameters(e.getMessage());
+        return ApiResponse.invalidParameters(e.getMessage());
     }
 
 }

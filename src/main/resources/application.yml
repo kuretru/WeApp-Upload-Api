@@ -3,18 +3,19 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
-
 server:
   port: 28023
+com.jhkj.weapp.upload.api.secrets:
+  advertising: f24a3dd4ee1d4728d58b6be2f109a090
 
 ---
 spring:
   profiles: local
-com.jhkj.weapp.upload.parent: G:\\jhkj\\upload\\
-com.jhkj.weapp.upload.temporary: temporary
+com.jhkj.weapp.upload.api.parent: G:\\jhkj\\upload\\
+com.jhkj.weapp.upload.api.temporary: temporary
 
 ---
 spring:
   profiles: production
-com.jhkj.weapp.upload.parent: /usr/share/tomcat/webapps/WxImg/
-com.jhkj.weapp.upload.temporary: temporary
+com.jhkj.weapp.upload.api.parent: /usr/share/tomcat/webapps/WxImg/
+com.jhkj.weapp.upload.api.temporary: temporary
