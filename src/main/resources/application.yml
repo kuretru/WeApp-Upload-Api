@@ -3,6 +3,9 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+  servlet:
+    multipart:
+      max-file-size: 5MB
 server:
   port: 28023
 com.jhkj.weapp.upload.api.secrets:

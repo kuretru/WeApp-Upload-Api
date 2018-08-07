@@ -6,6 +6,7 @@ import com.jhkj.weapp.common.entity.transfer.UploadDTO;
 import com.jhkj.weapp.common.exception.InvalidParametersException;
 import com.jhkj.weapp.common.exception.MissingParametersException;
 import com.jhkj.weapp.upload.service.UploadService;
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,6 +54,16 @@ public class UploadController extends BaseController {
                 stream.write(file.getBytes());
                 stream.close();
                 result.add(fileName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //endregion
+            //region 5.压缩图片
+            try {
+                Thumbnails.of(fullPath)
+                        .size(1920, 1080)
+                        .outputQuality(0.5)
+                        .toFile(fullPath);
             } catch (IOException e) {
                 e.printStackTrace();
             }
